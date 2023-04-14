@@ -17,14 +17,16 @@ export const useProducts = async () => {
 
 
     const getCategories = async (category = 'root', levels = 1) => {
-        const response = await fetch(`https://kv7kzm78.api.commercecloud.salesforce.com/product/shopper-products/v1/organizations/f_ecom_zybl_004/categories/${category}?siteId=SohleCrew&levels=${levels}`, {
-            method: 'GET',
+
+
+        const { data: categories } = await useAsyncData('categories', () => $fetch(`https://kv7kzm78.api.commercecloud.salesforce.com/product/shopper-products/v1/organizations/f_ecom_zybl_004/categories/${category}?siteId=SohleCrew&levels=${levels}`, {
             headers: {
                 Authorization: `Bearer ${token}`
-            }
-        })
-        let json = await response.json();
-        return json;
+            },
+            mode: "no-cors"
+        }) )
+
+        return categories;
     }
 
     return {
