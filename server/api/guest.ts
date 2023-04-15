@@ -23,11 +23,12 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    const {usid, customer_id, access_token} = await response.json();    
+    const {usid, customer_id, access_token, refresh_token} = await response.json();    
 
     return {
         customer_id,
         usid,
-        token: access_token
+        token: access_token, 
+        refresh_token
     };
 });

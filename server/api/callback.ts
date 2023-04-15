@@ -24,8 +24,8 @@ export default defineEventHandler(async (event) => {
         })
     })
 
-    const { refresh_token, expires_in, customer_id, access_token} =  await response.json();
+    const { refresh_token, customer_id, access_token} =  await response.json();
 
-    return {code, usid, refresh_token, expires_in, customer_id, access_token};
+    return {code, usid, refresh_token, customer_id, access_token};
 });
 
