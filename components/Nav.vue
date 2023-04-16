@@ -22,18 +22,6 @@ const categories = await getCategories("root", 2);
               alt="Your Company"
             />
           </div>
-          <!-- <div class="hidden sm:ml-6 sm:block">
-            <div class="flex space-x-4">
-              <a
-                v-for="category in categories?.categories"
-                :key="category.id"
-                href="#"
-                class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
-                aria-current="page"
-                >{{ category.name }}</a
-              >
-            </div>
-          </div> -->
           <HlMenu v-for="category in categories?.categories">
             <HlMenuButton
               :key="category.id"
