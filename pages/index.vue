@@ -1,6 +1,18 @@
 <script setup lang="ts">
-const { getProducts } = await useProducts();
+import { useBasketStore } from "~/store/basket";
+const store = useBasketStore();
 
+const { getBasket, fetchBasket } = await useBasket();
+
+if (!store.basket?.basketId) {
+  await getBasket();
+}
+
+if (store.basket?.basketId && store.basket?.error) {
+  await fetchBasket();
+}
+
+const { getProducts } = await useProducts();
 const products = await getProducts("newarrivals-mens");
 </script>
 
@@ -33,6 +45,7 @@ const products = await getProducts("newarrivals-mens");
           :image="product.image.disBaseLink"
           :name="product.productName"
           :price="product.price"
+          :productId="product.representedProduct.id"
         />
       </SwiperSlide>
     </Swiper>

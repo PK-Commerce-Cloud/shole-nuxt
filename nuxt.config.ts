@@ -1,6 +1,11 @@
 export default defineNuxtConfig({
     modules: [
-        '@nuxt/image-edge', '@nuxtjs/tailwindcss', 'nuxt-swiper', 'nuxt-headlessui'
+        '@pinia/nuxt',
+        'nuxt-headlessui',
+        'nuxt-swiper', 
+        '@nuxt/image-edge', 
+        '@nuxtjs/tailwindcss',
+        '@pinia-plugin-persistedstate/nuxt'
     ],
     swiper: {
         styleLang: 'css',
