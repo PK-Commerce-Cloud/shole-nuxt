@@ -1,6 +1,7 @@
 import randomstring from "randomstring";
 import crypto from "crypto-js";
 
+const maxAge = 90*24*60*60
 
 const base64Url = (string) => {
     return string
@@ -23,8 +24,14 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    const {usid, customer_id, access_token, refresh_token} = await response.json();    
-
+    const {usid, customer_id, access_token, refresh_token} = await response.json();   
+    
+    setCookie(event, 'session', JSON.stringify({usid, customer_id, access_token, refresh_token} ));
+    setCookie(event, 'refresh_token', JSON.stringify({refresh_token} ), {
+        maxAge,
+        path: '/',
+        sameSite: 'lax',
+    });
     return {
         customer_id,
         usid,

@@ -1,4 +1,7 @@
 
+const maxAge = 90*24*60*60
+
+
 export default defineEventHandler(async (event) => {
 
     let tokenUrl =
@@ -19,6 +22,14 @@ export default defineEventHandler(async (event) => {
     })
 
     const { refresh_token, customer_id, access_token, usid } =  await response.json();
+
+    setCookie(event, 'session', JSON.stringify({usid, customer_id, access_token, refresh_token} ));
+    setCookie(event, 'refresh_token', JSON.stringify({refresh_token} ), {
+        maxAge,
+        path: '/',
+        sameSite: 'lax',
+    });
+
 
     return { refresh_token, customer_id, token: access_token, usid};
 });
