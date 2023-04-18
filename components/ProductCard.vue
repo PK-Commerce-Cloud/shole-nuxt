@@ -33,5 +33,6 @@ const props = defineProps({
       </div>
       <p class="text-sm font-medium text-gray-900">${{ price }}</p>
     </div>
+    <button>add to cart</button>
   </div>
 </template>

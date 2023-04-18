@@ -1,11 +1,10 @@
 import { useBasketStore } from "~/store/basket";
 import { useUser } from "./useUser";
-import { storeToRefs } from "pinia";
 
 
 export const useBasket = async () => {
 
-    const store = useBasketStore()
+  /*   const store = useBasketStore()
     
     const { session  } = await useUser();
 
@@ -41,8 +40,9 @@ export const useBasket = async () => {
         } : data.value);
     }
 
+
     return {
         getBasket,
         fetchBasket
-    }
+    } */
 }

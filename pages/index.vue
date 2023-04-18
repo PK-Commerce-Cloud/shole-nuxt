@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { useBasketStore } from "~/store/basket";
-const store = useBasketStore();
-
-const { getBasket, fetchBasket } = await useBasket();
-
-if (!store.basket?.basketId) {
-  await getBasket();
-}
-
-if (store.basket?.basketId && store.basket?.error) {
-  await fetchBasket();
-}
-
 const { getProducts } = await useProducts();
-const products = await getProducts("newarrivals-mens");
+
+const { data: products } = await getProducts();
+
+definePageMeta({
+  middleware: "loading",
+});
 </script>
 
 <template>
