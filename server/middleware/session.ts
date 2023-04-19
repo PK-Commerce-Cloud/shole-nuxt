@@ -20,11 +20,13 @@ const base64Url = (string) => {
 };
 
 export default defineEventHandler(async (event) => {
-  const cookies = parseCookies(event);
+  const cookie = getCookie(event, 'session');
 
-  if (cookies.session) {
+  const {session} = JSON.parse(cookie || '{}')
+
+  if (session && session?.access_token) {
     return;
-  } else if (cookies.refresh_token) {
+  } else if (session && session?.refresh_token) {
     const response = await fetch(
       "https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/token",
       {
@@ -35,7 +37,7 @@ export default defineEventHandler(async (event) => {
         body: new URLSearchParams({
           client_id: "0344f56d-3123-4cb8-ba82-be48f6baa789",
           grant_type: "refresh_token",
-          refresh_token: cookies.refresh_token,
+          refresh_token: session.refresh_token,
         }),
       }
     );
