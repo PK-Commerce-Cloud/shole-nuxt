@@ -3,9 +3,14 @@ export const useProducts = () => {
     return useFetch(url);
   };
 
-  const getProducts = () =>
+  const getProducts = (category = 'newarrivals', limit = 25) =>
     call(
-      "/api/products/newarrivals-mens"
+      `/api/products/${category}?limit=${limit}`
+    );
+
+  const getProduct = (id = 'newarrivals') =>
+    call(
+      `/api/products?ids=${id}`
     );
 
   const getCategories = (category = "root", levels = 1) =>
@@ -14,5 +19,6 @@ export const useProducts = () => {
   return {
     getProducts,
     getCategories,
+    getProduct
   };
 };

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 const props = defineProps({
-  image: String,
-  name: String,
-  color: String,
-  price: Number,
-  productId: String,
+  product: Object,
 });
 
 const { addItem } = useBasket();
@@ -15,26 +11,28 @@ const { addItem } = useBasket();
     <div
       class="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
     >
-      <img
-        :src="
-          image ||
-          'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg'
-        "
-        :alt="name"
-        class="h-full w-full object-cover object-center lg:h-full lg:w-full"
-      />
+      <NuxtLink :to="`/product/${product?.representedProduct.id}`">
+        <NuxtImg
+          :src="product?.image.disBaseLink || '/loading.svg'"
+          :alt="product?.name"
+          lazy
+          class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+        />
+      </NuxtLink>
     </div>
     <div class="mt-4 flex justify-between">
       <div>
         <h3 class="text-sm text-gray-700">
           <a href="#">
-            {{ name }}
+            {{ product?.name }}
           </a>
         </h3>
-        <p class="mt-1 text-sm text-gray-500">{{ color }}</p>
+        <p class="mt-1 text-sm text-gray-500">{{ product?.color }}</p>
       </div>
-      <p class="text-sm font-medium text-gray-900">${{ price }}</p>
+      <p class="text-sm font-medium text-gray-900">${{ product?.price }}</p>
     </div>
-    <button v-on:click="addItem(productId)">add to cart</button>
+    <button v-on:click="addItem(product?.representedProduct.id)">
+      add to cart
+    </button>
   </div>
 </template>

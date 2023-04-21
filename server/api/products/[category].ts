@@ -3,8 +3,19 @@ export default defineEventHandler(async (event) => {
 
   const { session } = JSON.parse(getCookie(event, "session") || "{}");
 
+  const query = getQuery(event);
+  const url = new URL(
+    `https://kv7kzm78.api.commercecloud.salesforce.com/search/shopper-search/v1/organizations/f_ecom_zybl_004/product-search?siteId=RefArch&refine=cgid=${category}`
+  );
+
+  if (query) {
+    Object.keys(query).forEach((key) => {
+      query[key] && url.searchParams.append(key, query[key] as string);
+    });
+  }
+
   const fetchBasket = await fetch(
-    `https://kv7kzm78.api.commercecloud.salesforce.com/search/shopper-search/v1/organizations/f_ecom_zybl_004/product-search?siteId=RefArch&refine=cgid=${category}`,
+    url,
     {
       method: "GET",
       headers: {

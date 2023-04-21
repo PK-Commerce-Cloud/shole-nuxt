@@ -9,16 +9,57 @@ const fullProduct = computed(() => (productId) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-4 gap-4">
-    <div class="col-span-3">
-      <ul class="space-y-4">
-        <ClientOnly>
-          <li v-for="product in basket?.productItems" :key="product.productId">
-            <CartProduct :product="fullProduct(product.productId)" />
-          </li>
-        </ClientOnly>
-      </ul>
-    </div>
-    <div>right</div>
+  <div>
+    <Hero title="Your cart is empty." v-if="!basket.productItems">
+      <template v-slot:subtitle>
+        <p class="font-bold">
+          Sign in to retrieve your saved items or continue shopping.
+        </p>
+      </template>
+    </Hero>
+
+    <ClientOnly v-else>
+      <div class="grid grid-cols-4 gap-4 my-4">
+        <section class="col-span-3">
+          <ul class="space-y-4">
+            <li
+              v-for="product in basket?.productItems"
+              :key="product.productId"
+            >
+              <ProductLineItem
+                :product="fullProduct(product.productId)"
+                :product-line-item="product"
+              />
+            </li>
+          </ul>
+        </section>
+        <section>
+          <article class="space-y-2">
+            <h2 class="text-lg capitalize font-bold mb-2">Order Summary</h2>
+            <h3 id="subtotal" class="font-bold flex justify-between">
+              <label for="subtotal">Subtotal</label> ${{
+                basket?.productSubTotal
+              }}
+            </h3>
+            <h3 id="tax" class="flex justify-between">
+              <label for="tax">Tax</label>
+              ${{ basket?.adjustedMerchandizeTotalTax }}
+            </h3>
+            <hr />
+            <h3 id="total" class="font-bold flex justify-between">
+              <label for="total">Estimated Total</label>
+              ${{ basket?.productTotal }}
+            </h3>
+            <footer class="py-8">
+              <button
+                class="w-full bg-blue-500 text-white rounded-md px-3 py-2 text-sm font-medium"
+              >
+                Proceed to Checkout
+              </button>
+            </footer>
+          </article>
+        </section>
+      </div>
+    </ClientOnly>
   </div>
 </template>

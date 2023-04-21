@@ -2,7 +2,7 @@
 const { getProducts } = useProducts();
 const { getBasket } = useBasket();
 
-const { data: products } = await getProducts();
+const { data: products } = await getProducts("newarrivals-womens", 5);
 
 await getBasket();
 </script>
@@ -33,12 +33,7 @@ await getBasket();
           :key="product.productId"
           class="px-5"
         >
-          <ProductCard
-            :image="product.image.disBaseLink"
-            :name="product.productName"
-            :price="product.price"
-            :productId="product.representedProduct.id"
-          />
+          <ProductCard :product="product" />
         </SwiperSlide>
       </Swiper>
     </Hero>

@@ -6,7 +6,7 @@ const basketStore = useBasketStore();
 
 const { totalItems, basket } = storeToRefs(basketStore);
 
-watch(basket, () => {
+/* watch(basket, () => {
   const { $swal } = useNuxtApp();
   $swal.fire({
     toast: true,
@@ -17,7 +17,7 @@ watch(basket, () => {
     timer: 1500,
     timerProgressBar: true,
   });
-});
+}); */
 
 const { getCategories } = await useProducts();
 const { data: categories } = await getCategories("root", 2);
@@ -26,11 +26,11 @@ const { data: categories } = await getCategories("root", 2);
 <template>
   <nav class="bg-gray-800">
     <div class="mx-auto max-w-screen-2xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
+      <div class="flex h-16 items-center justify-between">
         <div
           class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
         >
-          <div class="flex flex-shrink-0 items-center">
+          <NuxtLink to="/" class="flex flex-shrink-0 items-center">
             <img
               class="block h-8 w-auto lg:hidden"
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
@@ -41,21 +41,36 @@ const { data: categories } = await getCategories("root", 2);
               src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
               alt="Your Company"
             />
-          </div>
+          </NuxtLink>
           <HlMenu v-for="category in categories?.categories">
             <HlMenuButton
               :key="category.id"
               class="ml-3 bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
-              >{{ category.name }}</HlMenuButton
             >
-            <HlMenuItems v-if="category.categories?.length >= 2">
+              <template v-if="!category.categories">
+                <NuxtLink :to="`/category/${category.id}`">{{
+                  category.name
+                }}</NuxtLink>
+              </template>
+
+              <template v-else>
+                {{ category.name }}
+              </template>
+            </HlMenuButton>
+            <HlMenuItems
+              v-if="category.categories?.length >= 2"
+              class="bg-neutral-50 shadow-xl absolute w-screen left-0 top-[64px] flex flex-column p-8 z-50 flex-col"
+            >
               <HlMenuItem
                 v-slot="{ active }"
                 v-for="subCategory in category.categories"
               >
-                <a :class="{ 'bg-blue-500': active }">
+                <NuxtLink
+                  :to="`/category/${subCategory.id}`"
+                  :class="{ 'bg-blue-500': active }"
+                >
                   {{ subCategory.name }}
-                </a>
+                </NuxtLink>
               </HlMenuItem>
             </HlMenuItems>
           </HlMenu>
@@ -63,8 +78,8 @@ const { data: categories } = await getCategories("root", 2);
         <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-          <button
-            type="button"
+          <NuxtLink
+            to="/cart"
             class="bg-gray-800 p-1 text-gray-400 hover:text-white flex space-x-2 space-x-reverse"
           >
             <span class="sr-only">View notifications</span>
@@ -85,7 +100,7 @@ const { data: categories } = await getCategories("root", 2);
             <ClientOnly>
               {{ totalItems }}
             </ClientOnly>
-          </button>
+          </NuxtLink>
 
           <!-- Profile dropdown -->
           <div class="relative ml-3">
