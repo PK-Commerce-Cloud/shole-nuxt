@@ -1,12 +1,20 @@
-import { defineStore } from 'pinia'
-export const useBasketStore = defineStore('basket', {
+import { defineStore } from "pinia";
+export const useBasketStore = defineStore("basket", {
   state: () => ({
-    basket: {}
+    basket: {},
   }),
   actions: {
-    setBasket(value, from = 'unknow') {
-      this.basket = value
+    setBasket(value) {
+      this.basket = value;
     },
   },
-  persist: false
-})
+  getters: {
+    totalItems: (state) =>
+      state.basket.productItems?.reduce((prev, next) => {
+        return prev + next.quantity;
+      }, 0),
+  },
+  persist: {
+    storage: persistedState.localStorage,
+  },
+});
