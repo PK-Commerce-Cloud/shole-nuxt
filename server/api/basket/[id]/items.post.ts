@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const id = event.context.params?.id || basket.basketId;
   if (session?.access_token && id) {
     const data = await fetch(
-      `https://kv7kzm78.api.commercecloud.salesforce.com/checkout/shopper-baskets/v1/organizations/f_ecom_zybl_004/baskets/${id}/items?siteId=SohleCrew`,
+      `https://kv7kzm78.api.commercecloud.salesforce.com/checkout/shopper-baskets/v1/organizations/f_ecom_zybl_004/baskets/${id}/items?siteId=RefArch`,
       {
         method: "POST",
         headers: {

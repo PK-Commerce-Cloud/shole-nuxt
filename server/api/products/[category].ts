@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const { session } = JSON.parse(getCookie(event, "session") || "{}");
 
   const fetchBasket = await fetch(
-    `https://kv7kzm78.api.commercecloud.salesforce.com/search/shopper-search/v1/organizations/f_ecom_zybl_004/product-search?siteId=SohleCrew&refine=cgid=${category}`,
+    `https://kv7kzm78.api.commercecloud.salesforce.com/search/shopper-search/v1/organizations/f_ecom_zybl_004/product-search?siteId=RefArch&refine=cgid=${category}`,
     {
       method: "GET",
       headers: {

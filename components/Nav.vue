@@ -48,7 +48,7 @@ const { data: categories } = await getCategories("root", 2);
               class="ml-3 bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
               >{{ category.name }}</HlMenuButton
             >
-            <HlMenuItems v-if="category.categories.length >= 2">
+            <HlMenuItems v-if="category.categories?.length >= 2">
               <HlMenuItem
                 v-slot="{ active }"
                 v-for="subCategory in category.categories"

@@ -39,7 +39,8 @@ export default defineEventHandler(async (event) => {
           client_id: "0344f56d-3123-4cb8-ba82-be48f6baa789",
           grant_type: "refresh_token",
           refresh_token: refresh_token,
-          usid: usid
+          usid: usid,
+          channel_id: 'RefArch'
         }),
       }
     );
@@ -53,7 +54,7 @@ export default defineEventHandler(async (event) => {
     const codeChallenge = base64Url(crypto.SHA256(codeVerifier));
 
     const res = await fetch(
-      `https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/authorize?client_id=0344f56d-3123-4cb8-ba82-be48f6baa789&redirect_uri=http://localhost:3000/api/callback&hint=guest&channel_id=SohleCrew&code_challenge=${codeChallenge}&response_type=code`,
+      `https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/authorize?client_id=0344f56d-3123-4cb8-ba82-be48f6baa789&redirect_uri=http://localhost:3000/api/callback&hint=guest&channel_id=RefArch&code_challenge=${codeChallenge}&response_type=code`,
       {
         headers: {
           verifier: codeVerifier,
@@ -69,7 +70,7 @@ export default defineEventHandler(async (event) => {
     urlParams.append("client_id", "0344f56d-3123-4cb8-ba82-be48f6baa789");
     urlParams.append("code_verifier", codeVerifier);
     urlParams.append("redirect_uri", "http://localhost:3000/api/callback");
-    urlParams.append("channel_id", "SohleCrew");
+    urlParams.append("channel_id", "RefArch");
 
     var r = await fetch(
       "https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/token",
