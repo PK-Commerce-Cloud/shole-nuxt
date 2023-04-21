@@ -1,11 +1,41 @@
-import { storeToRefs } from "pinia";
-import { useSessionStore } from "~/store/session";
 
+const maxAge = 90 * 24 * 60 * 60;
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const store = useSessionStore();
+  const cookie = useCookie<{
+    session: any
+  }>("session", {
+    maxAge: 1800,
+    watch: true,
+  });
 
-  const { session } = storeToRefs(store);
-  if (session.value.access_token) {
-    return navigateTo("/");
+  const refresh = useCookie<{
+    refresh_token: string,
+    usid: string
+  }>("refresh_token", {
+    maxAge
+  });
+
+  const { data } = await useFetch("/api/session");
+
+  watch(cookie, () => {
+    const { access_token, refresh_token, usid } = cookie.value?.session;
+    if (access_token) {
+      refresh.value = {
+        refresh_token,
+        usid,
+      };
+
+      if (cookie.value?.session.access_token) {
+        return navigateTo('/')
+      }
+    }
+  });
+
+  if (cookie.value?.session.access_token) {
+    return navigateTo('/')
   }
+
+  cookie.value = {
+    session: data.value,
+  };
 });

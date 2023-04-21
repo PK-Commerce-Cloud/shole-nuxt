@@ -1,5 +1,4 @@
 import crypto from "crypto-js";
-const maxAge = 90 * 24 * 60 * 60;
 
 function generateRandomString(length) {
   var text = "";
@@ -21,12 +20,14 @@ const base64Url = (string) => {
 
 export default defineEventHandler(async (event) => {
   const cookie = getCookie(event, 'session');
+  const refresh = getCookie(event, 'refresh_token');
 
   const {session} = JSON.parse(cookie || '{}')
+  const {refresh_token, usid} = JSON.parse(refresh || '{}')
 
   if (session && session?.access_token) {
-    return;
-  } else if (session && session?.refresh_token) {
+    return session;
+  } else if (!session?.access_token && refresh_token) {
     const response = await fetch(
       "https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/token",
       {
@@ -37,21 +38,16 @@ export default defineEventHandler(async (event) => {
         body: new URLSearchParams({
           client_id: "0344f56d-3123-4cb8-ba82-be48f6baa789",
           grant_type: "refresh_token",
-          refresh_token: session.refresh_token,
+          refresh_token: refresh_token,
+          usid: usid
         }),
       }
     );
 
     const json = await response.json();
-    
-    setCookie(event, "session", JSON.stringify({session: json}), {
-      maxAge: 1800,
-    });
-    setCookie(event, "refresh_token", json.refresh_token, {
-      maxAge,
-      path: "/",
-      sameSite: "lax",
-    });
+
+    return json;
+
   } else {
     const codeVerifier = generateRandomString(128);
     const codeChallenge = base64Url(crypto.SHA256(codeVerifier));
@@ -87,13 +83,7 @@ export default defineEventHandler(async (event) => {
     );
     const json = await r.json();
 
-    setCookie(event, "session", JSON.stringify({session: json}), {
-      maxAge: 1800,
-    });
-    setCookie(event, "refresh_token", json.refresh_token, {
-      maxAge,
-      path: "/",
-      sameSite: "lax",
-    });
+    return json;
+
   }
 });

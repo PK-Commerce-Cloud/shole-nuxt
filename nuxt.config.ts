@@ -12,5 +12,10 @@ export default defineNuxtConfig({
     },
     headlessui: {
         prefix: 'Hl'
+    },
+    routeRules: {
+        'index': {
+            swr: false
+        }
     }
 })

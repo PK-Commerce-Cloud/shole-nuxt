@@ -6,6 +6,8 @@ const props = defineProps({
   price: Number,
   productId: String,
 });
+
+const { addItem } = useBasket();
 </script>
 
 <template>
@@ -33,6 +35,6 @@ const props = defineProps({
       </div>
       <p class="text-sm font-medium text-gray-900">${{ price }}</p>
     </div>
-    <button>add to cart</button>
+    <button v-on:click="addItem(productId)">add to cart</button>
   </div>
 </template>

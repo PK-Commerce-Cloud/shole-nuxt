@@ -1,4 +1,16 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useBasketStore } from "~/store/basket";
+
+const basketStore = useBasketStore();
+
+const { basket } = storeToRefs(basketStore);
+
+const total = computed(() => {
+  return basket.value?.productItems?.reduce((prev, next) => {
+    return prev + next.quantity;
+  }, 0);
+});
 const { getCategories } = await useProducts();
 const { data: categories } = await getCategories("root", 2);
 </script>
@@ -10,6 +22,10 @@ const { data: categories } = await getCategories("root", 2);
         <div
           class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
         >
+          <div if="{{ basket }}">
+            {{ total }}
+          </div>
+
           <div class="flex flex-shrink-0 items-center">
             <img
               class="block h-8 w-auto lg:hidden"
