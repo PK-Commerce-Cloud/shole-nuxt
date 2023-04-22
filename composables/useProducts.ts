@@ -8,9 +8,9 @@ export const useProducts = () => {
       `/api/products/${category}?limit=${limit}`
     );
 
-  const getProduct = (id = 'newarrivals') =>
+  const getProduct = (id) =>
     call(
-      `/api/products?ids=${id}`
+      `/api/products?id=${id}`
     );
 
   const getCategories = (category = "root", levels = 1) =>

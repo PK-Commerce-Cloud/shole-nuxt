@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig();
 
   const query = getQuery(event);
+
   const url = new URL(
     `https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/search/shopper-search/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/product-search?siteId=${runtimeConfig.public.channel_id}&refine=cgid=${category}`
   );

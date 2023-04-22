@@ -15,12 +15,11 @@ const small = computed(
 
 <template>
   <article class="shadow-lg flex">
-    <NuxtImg
-      :src="small(product) || '/loading.svg'"
-      loading="lazy"
-      width="140"
-      height="140"
-    ></NuxtImg>
+    <div
+      class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+    >
+      <NuxtImg :src="small(product) || '/loading.svg'" loading="lazy"></NuxtImg>
+    </div>
 
     <div class="w-full px-4">
       <h1 class="text-xl font-bold">
