@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import products from "~/server/api/products";
-
 const props = defineProps({
   product: Object,
 });
-
-const { addItem } = useBasket();
 </script>
 
 <template>
@@ -26,15 +22,18 @@ const { addItem } = useBasket();
       <div>
         <h3 class="text-sm text-gray-700">
           <a href="#">
-            {{ product?.name }}
+            {{ product?.productName }}
           </a>
         </h3>
-        <p class="mt-1 text-sm text-gray-500">{{ product?.color }}</p>
+        <p
+          class="mt-1 text-sm text-gray-500"
+          v-if="product?.variationAttributes"
+        >
+          {{ product?.variationAttributes[0].name }}:
+          {{ product?.variationAttributes[0].values[0].name }}
+        </p>
       </div>
       <p class="text-sm font-medium text-gray-900">${{ product?.price }}</p>
     </div>
-    <button v-on:click="addItem(product?.representedProduct.id)">
-      add to cart
-    </button>
   </div>
 </template>
