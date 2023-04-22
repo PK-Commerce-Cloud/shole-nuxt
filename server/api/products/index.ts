@@ -1,10 +1,9 @@
 export default defineEventHandler(async (event) => {
-  const { session } = JSON.parse(getCookie(event, "session") || "{}");
 
+  const runtimeConfig = useRuntimeConfig();
+  
   const query = getQuery(event);
-  const url = new URL(
-    "https://kv7kzm78.api.commercecloud.salesforce.com/product/shopper-products/v1/organizations/f_ecom_zybl_004/products?siteId=RefArch"
-  );
+  const url = new URL(`https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/product/shopper-products/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/products?siteId=${runtimeConfig.public.channel_id}`);
 
   if (query) {
     Object.keys(query).forEach((key) => {
@@ -12,10 +11,9 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const fetchBasket = await fetch(url, {
+  const fetchBasket = await _fetch(event, url, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${session?.access_token}`,
       "Content-Type": "application/json",
     },
   });

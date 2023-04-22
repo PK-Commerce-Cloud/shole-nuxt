@@ -22,6 +22,8 @@ export default defineEventHandler(async (event) => {
   const cookie = getCookie(event, 'session');
   const refresh = getCookie(event, 'refresh_token');
 
+  const runtimeConfig = useRuntimeConfig()
+  
   const {session} = JSON.parse(cookie || '{}')
   const {refresh_token, usid} = JSON.parse(refresh || '{}')
 
@@ -29,14 +31,14 @@ export default defineEventHandler(async (event) => {
     return session;
   } else if (!session?.access_token && refresh_token) {
     const response = await fetch(
-      "https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/token",
+      `https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/shopper/auth/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/oauth2/token`,
       {
         method: "POST",
         headers: {
           contentType: "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          client_id: "0344f56d-3123-4cb8-ba82-be48f6baa789",
+          client_id: runtimeConfig.client_id,
           grant_type: "refresh_token",
           refresh_token: refresh_token,
           usid: usid,
@@ -54,7 +56,7 @@ export default defineEventHandler(async (event) => {
     const codeChallenge = base64Url(crypto.SHA256(codeVerifier));
 
     const res = await fetch(
-      `https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/authorize?client_id=0344f56d-3123-4cb8-ba82-be48f6baa789&redirect_uri=http://localhost:3000/api/callback&hint=guest&channel_id=RefArch&code_challenge=${codeChallenge}&response_type=code`,
+      `https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/shopper/auth/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/oauth2/authorize?client_id=${runtimeConfig.client_id}&redirect_uri=${runtimeConfig.public.callback}&hint=guest&channel_id=${runtimeConfig.public.channel_id}&code_challenge=${codeChallenge}&response_type=code`,
       {
         headers: {
           verifier: codeVerifier,
@@ -72,8 +74,7 @@ export default defineEventHandler(async (event) => {
     urlParams.append("redirect_uri", "http://localhost:3000/api/callback");
     urlParams.append("channel_id", "RefArch");
 
-    var r = await fetch(
-      "https://kv7kzm78.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/f_ecom_zybl_004/oauth2/token",
+    var r = await fetch(`https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/shopper/auth/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/oauth2/token`,
       {
         method: "POST",
         headers: {
