@@ -12,7 +12,14 @@ export default defineEventHandler(async (event) => {
 
   if (query) {
     Object.keys(query).forEach((key) => {
-      query[key] && url.searchParams.append(key, query[key] as string);
+      if(query[key] && Array.isArray(query[key])){
+        query[key]?.forEach(value => {
+          url.searchParams.append(key, value as string);
+        });
+      } else {
+        query[key] && url.searchParams.append(key, query[key] as string);
+      }
+      
     });
   }
 
@@ -23,7 +30,7 @@ export default defineEventHandler(async (event) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-      },
+      }
     }
   );
 

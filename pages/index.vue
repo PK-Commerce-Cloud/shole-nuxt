@@ -1,9 +1,8 @@
 <script setup lang="ts">
-const { getProducts } = useProducts();
+const { getProducts, products } = useProducts();
 const { getBasket } = useBasket();
 
-const { data: products } = await getProducts("newarrivals-womens", 5);
-
+await getProducts("newarrivals-womens", 6);
 await getBasket();
 </script>
 
@@ -17,25 +16,12 @@ await getBasket();
           how to replace it.</b
         >
       </template>
-      <Swiper
-        :height="300"
-        :modules="[SwiperAutoplay]"
-        :slides-per-view="3"
-        :loop="true"
-        :effect="'creative'"
-        :autoplay="{
-          delay: 8000,
-          disableOnInteraction: true,
-        }"
+
+      <div
+        class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8"
       >
-        <SwiperSlide
-          v-for="product in products?.hits"
-          :key="product.productId"
-          class="px-5"
-        >
-          <ProductCard :product="product" />
-        </SwiperSlide>
-      </Swiper>
+        <ProductCard v-for="product in products?.hits" :product="product" />
+      </div>
     </Hero>
   </div>
 </template>

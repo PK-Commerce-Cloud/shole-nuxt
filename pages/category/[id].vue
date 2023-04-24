@@ -8,11 +8,40 @@ import {
 
 const { params } = useRoute();
 
-const { getProducts } = useProducts();
+const { getProducts, filterProducts, products } = useProducts();
 
-const { data: products } = await getProducts(params.id as string);
+await getProducts(params.id as string);
 
 const mobileFiltersOpen = ref(false);
+
+const handleFilter = async (e) => {
+  let applied = products.value?.selectedRefinements[e.target.id];
+  const refine = new URLSearchParams();
+
+  if (e.target.checked) {
+    if (applied) {
+      applied = `${applied}|${e.target.value}`;
+    } else {
+      refine.append("refine", `${e.target.id}=${e.target.value}`);
+    }
+  } else {
+    let arr = applied.split("|");
+    arr.splice(arr.indexOf(e.target.value), 1);
+    applied = arr.join("|");
+  }
+
+  Object.keys(products.value?.selectedRefinements).forEach((k) => {
+    if (e.target.id === k) {
+      refine.append("refine", `${k}=${applied}`);
+    } else {
+      refine.append("refine", `${k}=${products.value?.selectedRefinements[k]}`);
+    }
+  });
+
+  await filterProducts(params.id, 25, {
+    refine: refine.getAll("refine"),
+  });
+};
 </script>
 
 <template>
@@ -65,6 +94,7 @@ const mobileFiltersOpen = ref(false);
               <form class="mt-4 border-t border-gray-200">
                 <ProductRefinements
                   custom-class="px-6"
+                  :selected="products?.selectedRefinements"
                   :refinements="products?.refinements.filter((r) => r.values)"
                 ></ProductRefinements>
               </form>
@@ -154,6 +184,8 @@ const mobileFiltersOpen = ref(false);
           <!-- Filters -->
           <form class="hidden lg:block">
             <ProductRefinements
+              :selected="products?.selectedRefinements"
+              v-on:change="handleFilter"
               :refinements="products?.refinements.filter((r) => r.values)"
             ></ProductRefinements>
           </form>
