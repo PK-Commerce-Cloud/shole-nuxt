@@ -7,7 +7,7 @@ export const useBasket = () => {
   const basket = ref({})
   const products = ref([])
 
-  const { basket: storeBasket, products: storeProducts, showBasket } = storeToRefs(store);
+  const { basket: storeBasket, products: storeProducts, showBasket, totalItems } = storeToRefs(store);
 
   const getBasket = async () => {
     const { data } = await useFetch("/api/basket");
@@ -46,6 +46,7 @@ export const useBasket = () => {
     getBasket,
     addItem,
 
+    totalItems,
     storeBasket,
     showBasket,
     products: storeProducts,
