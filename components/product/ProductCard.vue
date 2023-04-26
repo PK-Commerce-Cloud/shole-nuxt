@@ -2,6 +2,8 @@
 const props = defineProps({
   product: Object,
 });
+
+const { addItem } = useBasket();
 </script>
 
 <template>
@@ -34,6 +36,10 @@ const props = defineProps({
         </p>
       </div>
       <p class="text-sm font-medium text-gray-900">${{ product?.price }}</p>
+
+      <button @click="addItem(product.representedProduct.id)">
+        add to cart
+      </button>
     </div>
   </div>
 </template>

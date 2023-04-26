@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProductLineItem } from "~/.nuxt/components";
+const { remove } = useBasket();
 
 const props = defineProps({
   product: Object,
@@ -14,39 +14,41 @@ const small = computed(
 </script>
 
 <template>
-  <article class="shadow-lg flex">
-    <div
-      class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
-    >
-      <NuxtImg :src="small(product) || '/loading.svg'" loading="lazy"></NuxtImg>
-    </div>
+  <div
+    class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+  >
+    <NuxtImg
+      lazy
+      :src="small(product)"
+      class="h-full w-full object-cover object-center"
+    />
+  </div>
 
-    <div class="w-full px-4">
-      <h1 class="text-xl font-bold">
-        {{ product?.name }}
-      </h1>
-      <div>
-        <p v-for="(attr, key) in product?.variationValues" class="font-medium">
-          <small class="text-gray-400">{{ key }}:</small> {{ attr }}
-        </p>
-        <p v-if="product?.shortDescription" class="text-gray-400 text-sm">
-          {{ product.shortDescription }}
-        </p>
+  <div class="ml-4 flex flex-1 flex-col">
+    <div>
+      <div class="flex justify-between text-base font-medium text-gray-900">
+        <h3>
+          <a>{{ product?.name }}</a>
+        </h3>
+        <p class="ml-4">${{ productLineItem?.price }}</p>
       </div>
-      <div class="flex justify-between text-lg text-neutral-700">
-        <span v-if="product?.c_styleNumber" class="font-bold">
-          <small class="text-gray-400">Style:</small>
-          {{ product.c_styleNumber }}
-        </span>
-        <span class="font-bold">
-          <small class="text-gray-500">qty:</small>
-          {{ productLineItem?.quantity }}
-        </span>
-        <span class="font-bold">
-          <small class="text-gray-500">price:</small>
-          {{ productLineItem?.price }}
-        </span>
+      <p class="mt-1 text-sm text-gray-500" v-if="product?.variationAttributes">
+        {{ product?.variationAttributes[0].name }}:
+        {{ product?.variationAttributes[0].values[0].name }}
+      </p>
+    </div>
+    <div class="flex flex-1 items-end justify-between text-sm">
+      <p class="text-gray-500">Qty {{ productLineItem?.quantity }}</p>
+
+      <div class="flex">
+        <button
+          @click="remove(productLineItem?.itemId)"
+          type="button"
+          class="font-medium text-indigo-600 hover:text-indigo-500"
+        >
+          Remove
+        </button>
       </div>
     </div>
-  </article>
+  </div>
 </template>

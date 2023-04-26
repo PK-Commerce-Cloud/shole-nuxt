@@ -1,17 +1,3 @@
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
--->
 <template>
   <div class="bg-white">
     <!-- Mobile menu -->
@@ -379,17 +365,22 @@
 
               <!-- Cart -->
               <div class="ml-4 flow-root lg:ml-6">
-                <a href="#" class="group -m-2 flex items-center p-2">
+                <button
+                  @click="toggle"
+                  class="group -m-2 flex items-center p-2"
+                >
                   <ShoppingBagIcon
                     class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                     aria-hidden="true"
                   />
-                  <span
-                    class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"
-                    >0</span
-                  >
+                  <ClientOnly>
+                    <span
+                      class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"
+                      >{{ totalItems }}</span
+                    >
+                  </ClientOnly>
                   <span class="sr-only">items in cart, view bag</span>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -407,6 +398,8 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
+
+const { toggle, totalItems } = useBasket();
 
 const navigation = {
   categories: [

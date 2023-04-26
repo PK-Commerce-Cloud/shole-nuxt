@@ -94,6 +94,7 @@ const handleFilter = async (e) => {
               <form class="mt-4 border-t border-gray-200">
                 <ProductRefinements
                   custom-class="px-6"
+                  :change="handleFilter"
                   :selected="products?.selectedRefinements"
                   :refinements="products?.refinements.filter((r) => r.values)"
                 ></ProductRefinements>
