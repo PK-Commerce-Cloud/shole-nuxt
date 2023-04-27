@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
-const { toggle, showBasket, storeBasket: basket, products } = useBasket();
+const { toggle, showBasket, basket, products } = useBasket();
 
 const fullProduct = computed(() => (productId) => {
   return products.value?.data?.find((p) => p.id === productId);

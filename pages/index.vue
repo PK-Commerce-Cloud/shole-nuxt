@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const { getBasket, setBasket } = useBasket();
-const { getProducts, products } = useProducts();
+const { getProducts } = useProducts();
 
-await getBasket();
+const basket = await getBasket();
 onMounted(() => {
-  setBasket();
+  setBasket(basket.value);
 });
 
-await getProducts("newarrivals-womens", 6);
+const products = await getProducts("newarrivals-womens", 6);
 </script>
 
 <template>

@@ -4,43 +4,39 @@ import { useProductsStore } from "~/store/products";
 export const useProducts = () => {
   const store = useProductsStore();
 
-  const products = ref({});
-
-  const { products: storedProducts } = storeToRefs(store);
-
-  const call = async (url: string, query = {}) => {
-    return useFetch(() => url, { query });
-  };
+  const { products } = storeToRefs(store);
 
   const getProducts = async (category = "newarrivals", limit = 25) => {
-    const { data } = await call(`/api/products/${category}?limit=${limit}`);
-
-    products.value = data.value;
-
-    return products;
+    let { data: productsResponse } = await useFetch(
+      `/api/products/${category}?limit=${limit}`
+    );
+    return productsResponse;
   };
 
-  const getProduct = (id) => call(`/api/products?id=${id}`);
+  const getProduct = async (id) => {
+    let {data: productRef} = await useFetch(`/api/products?id=${id}`);
+    return productRef;
+  };
 
-  const getCategories = (category = "root", levels = 1) =>
-    call(`/api/categories/${category}?levels=${levels}`);
+  const getCategories = async (category = "root", levels = 1) => {
+    let { data: categoryRef } = await useFetch(
+      `/api/categories/${category}?levels=${levels}`
+    );
+
+    return categoryRef;
+  };
 
   const filterProducts = async (
     category = "newarrivals",
     limit = 25,
     query = {}
   ) => {
-    const { data } = await call(
-      `/api/products/${category}?limit=${limit}`,
-      query
+    let { data: filterProductsRef } = await useFetch(
+      () => `/api/products/${category}?limit=${limit}`,
+      { query }
     );
 
-    store.setProducts(data.value);
-
-    products.value = storedProducts.value;
-
-    return products;
-
+    store.setProducts(filterProductsRef.value);
   };
 
   return {
@@ -49,6 +45,5 @@ export const useProducts = () => {
     getProduct,
     filterProducts,
     products,
-    storedProducts,
   };
 };

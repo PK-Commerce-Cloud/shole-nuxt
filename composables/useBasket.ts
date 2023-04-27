@@ -4,21 +4,15 @@ import { useBasketStore } from "~/store/basket";
 export const useBasket = () => {
   const store = useBasketStore();
 
-  const basket = ref({})
-  const products = ref([])
-
-  const { basket: storeBasket, products: storeProducts, showBasket, totalItems } = storeToRefs(store);
+  const { basket, products, showBasket, totalItems } = storeToRefs(store);
 
   const getBasket = async () => {
-    const { data } = await useFetch("/api/basket");
-
-    basket.value = data.value;
-
-    return basket;
+    const { data: basketRef } = await useFetch("/api/basket");
+    return basketRef;
   };
 
-  const setBasket = () => {
-    store.setBasket(basket.value)
+  const setBasket = (value) => {
+    store.setBasket(value)
   }
 
   const addItem = async (productId, qty = 1) => {
@@ -47,9 +41,8 @@ export const useBasket = () => {
     addItem,
 
     totalItems,
-    storeBasket,
-    showBasket,
-    products: storeProducts,
     basket,
+    showBasket,
+    products
   };
 };

@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { StarIcon } from "@heroicons/vue/20/solid";
+
+const { params } = useRoute();
+const { getProduct } = useProducts();
+
+const selectedValues = ref({
+  color: {},
+  size: {},
+});
+
+const product = await getProduct(params.id as string);
+/* const reviews = { href: "#", average: 4, totalCount: 117 }; */
+
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}
+
+const gridImages = computed(() => {
+  const length = product.value.imageGroups[0].images.length;
+
+  return {
+    left: product.value.imageGroups[0].images[0],
+    center: [
+      product.value.imageGroups[0].images[getRandomInt(length)],
+      product.value.imageGroups[0].images[getRandomInt(length)],
+    ],
+    right: product.value.imageGroups[0].images[length - 1],
+  };
+});
+</script>
+
 <template>
   <div class="bg-white">
     <div class="pt-6">
@@ -8,24 +40,22 @@
         <div
           class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block"
         >
-          <img
-            :src="product?.imageGroups[0].images[0].disBaseLink"
-            :alt="product?.imageGroups[0].images[0].alt"
+          <NuxtImg
+            :src="gridImages.left.disBaseLink"
+            :alt="gridImages.left.alt"
+            loading="lazy"
             class="h-full w-full object-cover object-center"
           />
         </div>
         <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-          <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-            <img
-              :src="product?.imageGroups[0].images[0].disBaseLink"
-              :alt="product?.imageGroups[0].images[0].alt"
-              class="h-full w-full object-cover object-center"
-            />
-          </div>
-          <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-            <img
-              :src="product?.imageGroups[0].images[0].disBaseLink"
-              :alt="product?.imageGroups[0].images[0].alt"
+          <div
+            class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg"
+            v-for="image in gridImages.center"
+          >
+            <NuxtImg
+              :src="image.disBaseLink"
+              :alt="image.alt"
+              loading="lazy"
               class="h-full w-full object-cover object-center"
             />
           </div>
@@ -33,9 +63,10 @@
         <div
           class="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg"
         >
-          <img
-            :src="product?.imageGroups[0].images[0].disBaseLink"
-            :alt="product?.imageGroups[0].images[0].alt"
+          <NuxtImg
+            :src="gridImages.right.disBaseLink"
+            :alt="gridImages.right.alt"
+            loading="lazy"
             class="h-full w-full object-cover object-center"
           />
         </div>
@@ -61,7 +92,7 @@
           </p>
 
           <!-- Reviews -->
-          <div class="mt-6">
+          <!-- <div class="mt-6">
             <h3 class="sr-only">Reviews</h3>
             <div class="flex items-center">
               <div class="flex items-center">
@@ -84,7 +115,7 @@
                 >{{ reviews.totalCount }} reviews</a
               >
             </div>
-          </div>
+          </div> -->
 
           <form>
             <!-- Colors -->
@@ -162,13 +193,14 @@
             <h3 class="sr-only">Description</h3>
 
             <div class="space-y-6">
-              <p class="text-base text-gray-900">
-                {{ product?.longDescription }}
-              </p>
+              <div
+                class="text-base text-gray-900"
+                v-html="product?.longDescription"
+              ></div>
             </div>
           </div>
 
-          <div class="mt-10">
+          <div class="mt-10" v-if="product?.variationValues">
             <h3 class="text-sm font-medium text-gray-900">Highlights</h3>
 
             <div class="mt-4">
@@ -200,21 +232,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import { StarIcon } from "@heroicons/vue/20/solid";
-
-const { params } = useRoute();
-
-const { getProduct } = useProducts();
-
-const { data: product } = await getProduct(params.id as string);
-
-const reviews = { href: "#", average: 4, totalCount: 117 };
-
-const selectedValues = ref({
-  color: {},
-  size: {},
-});
-</script>

@@ -6,41 +6,59 @@ import {
   Squares2X2Icon,
 } from "@heroicons/vue/20/solid";
 
+const {
+  getProducts,
+  filterProducts,
+  getCategories,
+  products: searchResult,
+} = useProducts();
+
 const { params } = useRoute();
 
-const { getProducts, filterProducts, products } = useProducts();
-
-await getProducts(params.id as string);
-
 const mobileFiltersOpen = ref(false);
+const loading = ref(false);
 
-const handleFilter = async (e) => {
-  let applied = products.value?.selectedRefinements[e.target.id];
-  const refine = new URLSearchParams();
+const products = await getProducts(params.id as string);
+const category = await getCategories(params.id as string);
 
-  if (e.target.checked) {
-    if (applied) {
-      applied = `${applied}|${e.target.value}`;
-    } else {
-      refine.append("refine", `${e.target.id}=${e.target.value}`);
-    }
+const handleFilter = async ({ target }) => {
+  loading.value = true;
+
+  const { checked, value, id } = target;
+
+  let searchCopy = { ...products?.value.selectedRefinements };
+
+  let attribute = searchCopy[id] || [];
+
+  let values = Array.isArray(attribute) ? attribute : attribute.split("|");
+
+  // Either set the value, or filter the value out.
+  if (checked) {
+    values.push(value);
   } else {
-    let arr = applied.split("|");
-    arr.splice(arr.indexOf(e.target.value), 1);
-    applied = arr.join("|");
+    values = values?.filter((v) => {
+      return v !== value;
+    });
   }
 
-  Object.keys(products.value?.selectedRefinements).forEach((k) => {
-    if (e.target.id === k) {
-      refine.append("refine", `${k}=${applied}`);
-    } else {
-      refine.append("refine", `${k}=${products.value?.selectedRefinements[k]}`);
-    }
-  });
+  searchCopy = {
+    ...searchCopy,
+    [id]: values.join("|"),
+  };
+
+  const urlParmas = new URLSearchParams();
+
+  for (const iterator in searchCopy) {
+    urlParmas.append("refine", `${iterator}=${searchCopy[iterator]}`);
+  }
 
   await filterProducts(params.id, 25, {
-    refine: refine.getAll("refine"),
+    refine: urlParmas.getAll("refine"),
   });
+
+  products.value = searchResult.value;
+
+  loading.value = false;
 };
 </script>
 
@@ -62,7 +80,7 @@ const handleFilter = async (e) => {
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div class="fixed inset-0 bg-black bg-opacity-25" />
+          <div class="fixed inset-0 bg-black bg-opacity-25"></div>
         </HlTransitionChild>
 
         <div class="fixed inset-0 z-40 flex">
@@ -91,14 +109,19 @@ const handleFilter = async (e) => {
               </div>
 
               <!-- Filters -->
-              <form class="mt-4 border-t border-gray-200">
+              <div
+                :class="[
+                  loading ? 'pointer-events-none' : '',
+                  'mt-4 border-t border-gray-200',
+                ]"
+              >
                 <ProductRefinements
                   custom-class="px-6"
                   :change="handleFilter"
                   :selected="products?.selectedRefinements"
-                  :refinements="products?.refinements.filter((r) => r.values)"
+                  :refinements="products?.refinements"
                 ></ProductRefinements>
-              </form>
+              </div>
             </HlDialogPanel>
           </HlTransitionChild>
         </div>
@@ -110,7 +133,7 @@ const handleFilter = async (e) => {
         class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24"
       >
         <h1 class="text-4xl font-bold tracking-tight text-gray-900">
-          {{ params.id }}
+          {{ category.name }}
         </h1>
 
         <div class="flex items-center">
@@ -181,15 +204,17 @@ const handleFilter = async (e) => {
 
       <section aria-labelledby="products-heading" class="pb-24 pt-6">
         <h2 id="products-heading" class="sr-only">Products</h2>
-        <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-          <!-- Filters -->
-          <form class="hidden lg:block">
-            <ProductRefinements
-              :selected="products?.selectedRefinements"
-              v-on:change="handleFilter"
-              :refinements="products?.refinements.filter((r) => r.values)"
-            ></ProductRefinements>
-          </form>
+        <div
+          :class="[
+            loading ? 'pointer-events-none' : '',
+            'grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4',
+          ]"
+        >
+          <ProductRefinements
+            :selected="products?.selectedRefinements"
+            v-on:change="handleFilter"
+            :refinements="products?.refinements.filter((r) => r.values)"
+          ></ProductRefinements>
 
           <!-- Product grid -->
           <div class="lg:col-span-3">
