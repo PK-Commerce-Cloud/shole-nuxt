@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { remove } = useBasket();
-
+const { format } = useCurrency();
 const props = defineProps({
   product: Object,
   productLineItem: Object,
@@ -30,7 +30,7 @@ const small = computed(
         <h3>
           <a>{{ product?.name }}</a>
         </h3>
-        <p class="ml-4">${{ productLineItem?.price }}</p>
+        <p class="ml-4">{{ format(productLineItem?.price) }}</p>
       </div>
       <p class="mt-1 text-sm text-gray-500" v-if="product?.variationAttributes">
         {{ product?.variationAttributes[0].name }}:

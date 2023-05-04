@@ -181,7 +181,10 @@
         Get free delivery on orders over $100
       </p>
 
-      <nav aria-label="Top" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav
+        aria-label="Top"
+        class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8"
+      >
         <div class="border-b border-gray-200">
           <div class="flex h-16 items-center">
             <button

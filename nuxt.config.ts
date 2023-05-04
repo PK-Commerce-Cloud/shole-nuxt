@@ -18,5 +18,8 @@ export default defineNuxtConfig({
             callback: process.env.CALLBACK || 'http://localhost:3000/callback',
             version: process.env.VERSION || 'v1'
         }
+    },
+    routeRules: {
+        'checkout': { ssr: false }
     }
 })
