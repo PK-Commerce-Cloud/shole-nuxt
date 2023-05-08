@@ -14,7 +14,7 @@ export const useProducts = () => {
   };
 
   const getProduct = async (id) => {
-    let {data: productRef} = await useFetch(`/api/products?id=${id}`);
+    let {data: productRef} = await useFetch(`/api/products?id=${id}&allImages=true`);
     return productRef;
   };
 

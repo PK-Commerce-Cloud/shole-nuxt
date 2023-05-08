@@ -28,6 +28,17 @@ const gridImages = computed(() => {
     right: product.value.imageGroups[0].images[length - 1],
   };
 });
+
+const swatchs = computed(() => {
+  const swatchs = product.value.imageGroups.filter(
+    ({ viewType }) => viewType === "swatch"
+  );
+  return swatchs;
+});
+
+/* const swatch = computed(() => (id) => {
+  swatchs.find()
+}); */
 </script>
 
 <template>
@@ -131,25 +142,25 @@ const gridImages = computed(() => {
                 <div class="flex items-center space-x-3">
                   <HlRadioGroupOption
                     as="template"
-                    v-for="value in variation.values"
+                    v-for="value in variation.values.filter((v) => v.orderable)"
                     :key="value.value"
                     :value="value.value"
                     v-slot="{ active, checked }"
                   >
                     <div
                       :class="[
-                        value.orderable
-                          ? 'cursor-pointer bg-white text-gray-900 shadow-sm'
-                          : 'cursor-not-allowed bg-gray-50 text-gray-200',
+                        'cursor-pointer bg-white text-gray-900 shadow-sm',
                         active ? 'ring-2 ring-indigo-500' : '',
-                        'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6',
+                        'group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6',
                       ]"
                     >
-                      <HlRadioGroupLabel as="span">{{
-                        value.name
-                      }}</HlRadioGroupLabel>
+                      <HlRadioGroupLabel as="span">
+                        <template v-if="variation.id === 'color'">
+                          color
+                        </template>
+                        <template v-else> {{ value.name }} </template>
+                      </HlRadioGroupLabel>
                       <span
-                        v-if="value.orderable"
                         :class="[
                           active ? 'border' : 'border-2',
                           checked ? 'border-indigo-500' : 'border-transparent',
@@ -157,26 +168,6 @@ const gridImages = computed(() => {
                         ]"
                         aria-hidden="true"
                       />
-                      <span
-                        v-else
-                        aria-hidden="true"
-                        class="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
-                      >
-                        <svg
-                          class="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                          viewBox="0 0 100 100"
-                          preserveAspectRatio="none"
-                          stroke="currentColor"
-                        >
-                          <line
-                            x1="0"
-                            y1="100"
-                            x2="100"
-                            y2="0"
-                            vector-effect="non-scaling-stroke"
-                          />
-                        </svg>
-                      </span>
                     </div>
                   </HlRadioGroupOption>
                 </div>
