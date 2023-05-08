@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps({
   product: Object,
+  showActions: Boolean,
 });
 
 const localePath = useLocalePath();
@@ -18,9 +19,24 @@ const { addItem } = useBasket();
           :src="product?.image.disBaseLink || '/loading.svg'"
           :alt="product?.name"
           lazy
-          class="h-full w-full object-cover object-center lg:h-full lg:w-full"
         />
       </NuxtLink>
+      <div
+        v-if="showActions"
+        class="absolute -bottom-full flex w-3/4 justify-around duration-300 ease-in-out group-hover:bottom-4"
+      >
+        <button
+          class="rounded bg-blue-50 p-2 uppercase text-gray-800 shadow-sm"
+        >
+          View Product
+        </button>
+        <button
+          class="rounded bg-green-400 p-2 uppercase text-green-950 shadow-sm"
+          @click="addItem(product.representedProduct.id)"
+        >
+          add to cart
+        </button>
+      </div>
     </div>
     <div class="mt-4 flex justify-between">
       <div>
@@ -38,10 +54,6 @@ const { addItem } = useBasket();
         </p>
       </div>
       <p class="text-sm font-medium text-gray-900">${{ product?.price }}</p>
-
-      <button @click="addItem(product.representedProduct.id)">
-        add to cart
-      </button>
     </div>
   </div>
 </template>
