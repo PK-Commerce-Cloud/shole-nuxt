@@ -142,7 +142,7 @@ const gridImages = computed(() => {
                           ? 'cursor-pointer bg-white text-gray-900 shadow-sm'
                           : 'cursor-not-allowed bg-gray-50 text-gray-200',
                         active ? 'ring-2 ring-indigo-500' : '',
-                        'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6',
+                        'group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6',
                       ]"
                     >
                       <HlRadioGroupLabel as="span">{{

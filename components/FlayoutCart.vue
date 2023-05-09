@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 
+const localePath = useLocalePath();
+
 const { toggle, showBasket, basket, products } = useBasket();
 
 const fullProduct = computed(() => (productId) => {
@@ -94,7 +96,7 @@ const fullProduct = computed(() => (productId) => {
                       </p>
                       <div class="mt-6">
                         <NuxtLink
-                          to="/checkout"
+                          :to="localePath('/checkout')"
                           class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                           >Checkout</NuxtLink
                         >
