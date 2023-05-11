@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import { useProductsStore } from "~/store/products";
+
 const props = defineProps({
   product: Object,
   showActions: Boolean,
 });
 
 const { addItem } = useBasket();
+
+const handleClick = async (product: any) => {
+  const { setProduct } = useProductsStore();
+  await setProduct(product.productId);
+};
 </script>
 
 <template>
@@ -36,12 +43,13 @@ const { addItem } = useBasket();
       >
         <button
           class="rounded bg-blue-50 p-2 uppercase text-gray-800 shadow-sm"
+          v-on:click="handleClick(product)"
         >
           View Product
         </button>
         <button
           class="rounded bg-green-400 p-2 uppercase text-green-950 shadow-sm"
-          @click="addItem(product.representedProduct.id)"
+          @click="addItem(product?.representedProduct.id)"
         >
           add to cart
         </button>

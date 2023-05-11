@@ -64,6 +64,7 @@ const handleFilter = async ({ target }) => {
 
 <template>
   <div class="bg-white">
+    <h1>category</h1>
     <!-- Mobile filter dialog -->
     <HlTransitionRoot as="template" :show="mobileFiltersOpen">
       <HlDialog
@@ -223,6 +224,7 @@ const handleFilter = async ({ target }) => {
             >
               <ProductCard
                 v-for="product in products?.hits"
+                :show-actions="true"
                 :product="product"
               ></ProductCard>
             </div>

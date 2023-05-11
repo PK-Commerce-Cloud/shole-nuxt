@@ -6,14 +6,11 @@ const basket = await getBasket();
 onMounted(() => {
   setBasket(basket.value);
 });
-
 const products = await getProducts("newarrivals-womens", 6);
 </script>
 
 <template>
   <div>
-    <ProductQuickView> </ProductQuickView>
-
     <PromoSection />
     <Hero title="Shop Products">
       <template v-slot:subtitle>
