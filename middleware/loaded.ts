@@ -15,8 +15,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     maxAge
   });
 
-  const { data } = await useFetch("/api/session");
-
   watch(cookie, () => {
     const { access_token, refresh_token, usid } = cookie.value?.session;
     if (access_token) {
