@@ -10,7 +10,7 @@ export const _fetch = (
 
   const i18n_redirected = getCookie(event, "i18n_redirected");
 
-  const { session } = JSON.parse(cookie || "{}");
+  const session = JSON.parse(cookie || "{}");
 
   if (!session && !session?.access_token) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized ' })
@@ -18,7 +18,7 @@ export const _fetch = (
 
   const parseUrl = new URL(url.toString());
 
-  parseUrl.searchParams.append("locale", i18n_redirected || "en");
+  parseUrl.searchParams.append("locale", i18n_redirected || "default");
 
   const options = _.merge(
     {

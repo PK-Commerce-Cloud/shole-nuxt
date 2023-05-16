@@ -1,5 +1,7 @@
 import crypto from "crypto-js";
 
+const maxAge = 90 * 24 * 60 * 60;
+
 function generateRandomString(length) {
   var text = "";
   var possible =
@@ -21,14 +23,15 @@ const base64Url = (string) => {
 export default defineEventHandler(async (event) => {
   const cookie = getCookie(event, 'session');
   const refresh = getCookie(event, 'refresh_token');
+    
 
   const runtimeConfig = useRuntimeConfig()
   
-  const {session} = JSON.parse(cookie || '{}')
+  const session = JSON.parse(cookie || '{}')
   const {refresh_token, usid} = JSON.parse(refresh || '{}')
 
   if (session && session?.access_token) {
-    return session;
+    return;
   } else if (!session?.access_token && refresh_token) {
     const response = await fetch(
       `https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/shopper/auth/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/oauth2/token`,
@@ -49,7 +52,17 @@ export default defineEventHandler(async (event) => {
 
     const json = await response.json();
 
-    return json;
+    setCookie(event, 'session', JSON.stringify(json), {
+        maxAge: 1800,
+    })
+
+    setCookie(event, 'refresh_token', JSON.stringify({
+        refresh_token: json.refresh_token,
+        usid: json.usid
+    }), {
+        maxAge: maxAge
+    })
+
 
   } else {
     const codeVerifier = generateRandomString(128);
@@ -74,7 +87,7 @@ export default defineEventHandler(async (event) => {
     urlParams.append("redirect_uri", "http://localhost:3000/api/callback");
     urlParams.append("channel_id", "RefArch");
 
-    var r = await fetch(`https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/shopper/auth/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/oauth2/token`,
+    const response = await fetch(`https://${runtimeConfig.public.shortCode}.api.commercecloud.salesforce.com/shopper/auth/${runtimeConfig.public.version}/organizations/${runtimeConfig.public.organization}/oauth2/token`,
       {
         method: "POST",
         headers: {
@@ -83,9 +96,19 @@ export default defineEventHandler(async (event) => {
         body: urlParams,
       }
     );
-    const json = await r.json();
 
-    return json;
+    const json = await response.json();
+
+    setCookie(event, 'session', JSON.stringify(json), {
+        maxAge: 1800,
+    })
+
+    setCookie(event, 'refresh_token', JSON.stringify({
+        refresh_token: json.refresh_token,
+        usid: json.usid
+    }), {
+        maxAge: maxAge
+    })
 
   }
 });
