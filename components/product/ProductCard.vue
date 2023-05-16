@@ -6,6 +6,8 @@ const props = defineProps({
   showActions: Boolean,
 });
 
+const localePath = useLocalePath();
+
 const { addItem } = useBasket();
 
 const handleClick = async (product: any) => {
@@ -17,6 +19,7 @@ const handleClick = async (product: any) => {
 <template>
   <div class="group relative bg-white">
     <div
+
       :class="[
         showActions
           ? 'min-h-80 aspect-h-1 aspect-w-1 lg:aspect-none group relative flex w-full justify-center overflow-hidden rounded-md bg-gray-200 lg:h-80'

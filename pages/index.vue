@@ -11,6 +11,7 @@ const products = await getProducts("newarrivals-womens", 6);
 
 <template>
   <div>
+    <h1>{{ $t("welcome") }}</h1>
     <PromoSection />
     <Hero title="Shop Products">
       <template v-slot:subtitle>
