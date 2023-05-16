@@ -6,7 +6,6 @@ const basket = await getBasket();
 onMounted(() => {
   setBasket(basket.value);
 });
-
 const products = await getProducts("newarrivals-womens", 6);
 </script>
 
